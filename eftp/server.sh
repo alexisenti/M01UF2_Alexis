@@ -1,5 +1,4 @@
 #!/bin/bash
-
 CLIENT="LOCALHOST"
 
 echo “Servidor de EFTP”
