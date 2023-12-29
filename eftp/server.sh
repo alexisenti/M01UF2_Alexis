@@ -60,8 +60,32 @@ fi
 sleep 1
 echo "OK_HANDSHAKE" | nc $CLIENT $PORT
 
-echo "(8)a listen numero de archivos"
-echo "(8)b Send OK/KO"
+echo "(7a) Listen NUM_FILES"
+
+DATA=`nc -l -p $PORT -w $TIMEOUT`
+echo $DATA
+
+echo "(7b) Send OK/KO_NUM_FILES"
+
+PREFIX=`echo $DATA | cut -d " " -f 1`
+if [ "$PREFIX" != "NUM_FILES" ]
+then 
+	echo "ERROR 3a: WRONG NUM_FILES PREFIX"
+	echo "KO_FIE_NUM" | nc $CLIENT $PORT
+	exit 3
+fi 
+
+echo "OK_FILE_NUM" | nc $CLIENT $PORT
+
+FILE_NUM=`echo $DATA | cut -d " " -f 2`
+
+for N in `seq $FILE_NUM`
+do 
+echo "Archivo numero $N"
+
+
+
+
 echo "8  Listen"
 
 
@@ -137,5 +161,9 @@ then
 	exit 5
 fi 
 
+echo "OK_FILE_MD5" | nc $CLIENT $PORT
+
+done 
+
 echo "FIN"
-exit 0
+exit 

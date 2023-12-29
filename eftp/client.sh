@@ -61,15 +61,36 @@ echo "(10) Send"
 
 sleep 1
 
-FILE_NAME="fary1.txt"
+echo "(9a) SEND NUM_FILES"
+NUM_FILES=`ls imgs/ | wc -l`
+sleep 1
+
+
+
+echo "NUM_FILES $NUM_FILS" | nc $SERVER $PORT
+
+echo "(9b) LISTEN OK/KO_NUM_FILES"
+
+DATA=`nc -l -p $PORT -w $TIMEOUT`
+
+if [ "$DATA" != "OK_FILE_NUM" ]
+then 
+	echo "ERROR 3a: WRONG FILE_NUM"
+	exit 3
+fi 
+
+for FILE_NAME in `ls imgs/`
+
+do 
+
+echo "(10b) Send FILE_NAME"
+
+sleep 1
 
 FILE_MD5=`echo $FILE_NAME | md5sum | cut -d " " -f 1`
-
 echo "FILE_NAME $FILE_NAME $FILE_MD5" | nc $SERVER $PORT
 
-
-
-echo "(11) Listen"
+echo "11 listen" 
 
 DATA=`nc -l -p $PORT -w $TIMEOUT`
 
@@ -111,7 +132,8 @@ then
 	echo "ERROR: FILE MD5"
 	exit 5
 fi
-sleep 1
+
+done
 
 echo "FIN"
 exit 0
